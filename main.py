@@ -47,6 +47,7 @@ class main:
 					myurl = "{}{}{}".format(self.url_f, element, self.url_l)
 					htmlpage = requests.post(myurl, params=myparams)
 					print(htmlpage.url)
+					time.sleep(10)
 					counter += 1
 					if "查無資料" in htmlpage.text: break
 

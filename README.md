@@ -5,7 +5,7 @@ crawler to get lotto history data([台灣彩券](https://www.taiwanlottery.com.t
 ```=1
 make install
 source ./env/bin/activate
-sudo pip3 install -r ./requirements.txt
+make package
 ```
 
 ## Clone repo
