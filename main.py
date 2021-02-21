@@ -59,35 +59,42 @@ class main:
 					myparams = {
 						"__EVENTTARGET": "",
 						"__EVENTARGUMENT": "",
-						"__EVENTVALIDATION": self.eventvalidation,
 						"__LASTFOCUS": "",
 						"__VIEWSTATE": self.viewstate,
 						"__VIEWSTATEGENERATOR": self.viewstategenerator,
+						"__EVENTVALIDATION": self.eventvalidation,
 						"{}$DropDownList1".format(prefixs): "{}".format(dropdown),
 						"{}$chk".format(prefixs): "radNO",
-						"{}$txtNo".format(prefixs): "{}000{}".format(year, tcounter.zfill(3)),
+						"{}$txtNO".format(prefixs): "{}000{}".format(year, tcounter.zfill(3)),
 						"{}$btnSubmit".format(prefixs): "查詢",
 					}
 					myurl = "{}{}{}".format(self.url_f, element, self.url_l)
 					htmlpage = self.myrequests.post(myurl, headers=self.useragent, data=myparams)
-					print(htmlpage.status_code)
+
+					echostr = "{} {}000{}".format(header, year, tcounter.zfill(3))
 
 					if htmlpage.status_code != 200: raise serverError(htmlpage.status_code)
 
-					self.parse(htmlpage, header, dropdown)
-					time.sleep(0.3)
+					self.parse(htmlpage, header, dropdown, echostr)
+					time.sleep(0.1)
 					counter += 1
 					# 更新 validation
 					self.getArgs(element)
 
-	def parse(self, htmlpage, header, dropdown):
+	def echoLog(self, echostr, msgstr):
+		print("{}: {}".format(echostr, msgstr))
+
+	def parse(self, htmlpage, header, dropdown, echostr):
+		msgstr = None
 		try:
 			self.checkServerStatus(htmlpage)
 			self.checkEmpty(htmlpage, header, dropdown)
-		except lotteryEmptyError as e:
-			print("Lottery empty: {}".format(e))
-		except serverError as e:
-			print("Server error: {}".format(e))
+		except (lotteryEmptyError, serverError) as e:
+			msgstr = e
+		else:
+			msgstr = htmlpage.status_code
+		finally:
+			self.echoLog(echostr, msgstr)
 
 	def checkServerStatus(self, htmlpage):
 		# htmlpage.encoding = "ISO-8859-1"
@@ -109,8 +116,7 @@ class main:
 		soup = BeautifulSoup(htmltext, "html.parser")
 
 		tag = soup.find("span", {"id": "{}Control_history{}_Label1".format(header, lotteryConstant.lottery_control[header])})
-		if tag is None: raise lotteryPageError
-		if "查無資料" in tag: raise lotteryEmptyError
+		if tag is None or "查無資料" in tag: raise lotteryEmptyError
 
 if __name__ == "__main__":
 	m = main()
