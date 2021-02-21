@@ -10,6 +10,8 @@ from customException.customException import lotteryEmptyError, lotteryValidation
 from customException.customException import lotteryPageError
 from customException.customException import serverError
 
+from customException.customException import stepBackNotification, breakNotification
+
 from lotteryConstant.lotteryConstant import lotteryConstant
 
 class main:
@@ -71,13 +73,15 @@ class main:
 					myurl = "{}{}{}".format(self.url_f, element, self.url_l)
 					htmlpage = self.myrequests.post(myurl, headers=self.useragent, data=myparams)
 
-					echostr = "{} {}000{}".format(header, year, tcounter.zfill(3))
+					try:
+						counter += 1
+						self.parse(htmlpage, header, dropdown, "{} {}000{}".format(header, year, tcounter.zfill(3)))
+						time.sleep(0.1)
+					except stepBackNotification as e:
+						counter -= 1
+					except breakNotification as e:
+						break
 
-					if htmlpage.status_code != 200: raise serverError(htmlpage.status_code)
-
-					self.parse(htmlpage, header, dropdown, echostr)
-					time.sleep(0.1)
-					counter += 1
 					# 更新 validation
 					self.getArgs(element)
 
@@ -85,18 +89,47 @@ class main:
 		print("{}: {}".format(echostr, msgstr))
 
 	def parse(self, htmlpage, header, dropdown, echostr):
-		msgstr = None
+		msgstr = htmlpage.status_code
+		numbers = list()
+		flag = None
+
 		try:
 			self.checkServerStatus(htmlpage)
 			self.checkEmpty(htmlpage, header, dropdown)
-		except (lotteryEmptyError, serverError) as e:
+			numbers = self.parseNumber(htmlpage, header)
+		except lotteryEmptyError as e:
 			msgstr = e
-		else:
-			msgstr = htmlpage.status_code
+			flag = 1
+		except serverError as e:
+			msgstr = e
+			flag = 2
 		finally:
 			self.echoLog(echostr, msgstr)
+			print(numbers)
+			if flag == 1: raise breakNotification
+			if flag == 2: raise stepBackNotification
+
+	def parseNumber(self, htmlpage, header):
+		htmlpage.encoding = "utf-8"
+		htmltext = htmlpage.text
+		soup = BeautifulSoup(htmltext, "html.parser")
+
+		numbers = lotteryConstant.lottery_parser[header].parse(soup)
+		return numbers
+		
+		# SuperLotto638Control_history1_dlQuery_No7_0
+		# Lotto649Control_history_dlQuery_SNo5_0
+		# D539Control_history1_dlQuery_SNo3_0
+		# Lotto1224Control_history_dlQuery_SNo7_0
+		# font_black14b_center
+		# font_black14b_center
+		# M638Control_history1_dlQuery_SNo3_0
+		# M649Control_history1_dlQuery_SNo2_0
+		# M539Control_history1_dlQuery_Label9_0
 
 	def checkServerStatus(self, htmlpage):
+		if htmlpage.status_code != 200: raise serverError(htmlpage.status_code)
+
 		# htmlpage.encoding = "ISO-8859-1"
 		htmlpage.encoding = "big5"
 		htmltext = htmlpage.text
