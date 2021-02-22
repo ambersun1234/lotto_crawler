@@ -7,6 +7,9 @@ from lotteryParser import D539Parser
 from lotteryParser import Lotto1224Parser
 from lotteryParser import L3DParser
 from lotteryParser import L4DParser
+from lotteryParser import M638Parser
+from lotteryParser import M649Parser
+from lotteryParser import M539Parser
 
 class lotteryConstant:
 	# 威力彩, 大樂透, 今彩539,
@@ -25,7 +28,7 @@ class lotteryConstant:
 	lottery_dropdown = [
 		1, 2, 5,
 		12, 6, 7,
-		8, 9, 10
+		4, 3, 10
 	]
 	lottery_control = {
 		"SuperLotto638": "1", "Lotto649": "", "D539": "1",
@@ -38,5 +41,8 @@ class lotteryConstant:
 		"D539": D539Parser.D539Parser(lottery_control["D539"]),
 		"Lotto1224": Lotto1224Parser.Lotto1224Parser(lottery_control["Lotto1224"]),
 		"L3D": L3DParser.L3DParser(lottery_control["L3D"]),
-		"L4D": L4DParser.L4DParser(lottery_control["L4D"])
+		"L4D": L4DParser.L4DParser(lottery_control["L4D"]),
+		"M638": M638Parser.M638Parser(lottery_control["M638"]),
+		"M649": M649Parser.M649Parser(lottery_control["M649"]),
+		"M539": M539Parser.M539Parser(lottery_control["M539"])
 	}

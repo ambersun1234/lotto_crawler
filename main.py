@@ -57,6 +57,7 @@ class main:
 		for dropdown, header, element in zip(lotteryConstant.lottery_dropdown, lotteryConstant.lottery_header, lotteryConstant.lottery_type):
 			# 取得 validation
 			self.getArgs(element)
+			self.start_year = 103
 			for year in range(self.start_year, self.end_year + 1):
 				counter = 1
 				while True:
@@ -66,6 +67,7 @@ class main:
 						"__EVENTTARGET": "",
 						"__EVENTARGUMENT": "",
 						"__LASTFOCUS": "",
+						"__VIEWSTATEENCRYPTED": "",
 						"__VIEWSTATE": self.viewstate,
 						"__VIEWSTATEGENERATOR": self.viewstategenerator,
 						"__EVENTVALIDATION": self.eventvalidation,
@@ -85,9 +87,6 @@ class main:
 						counter -= 1
 					except breakNotification as e:
 						break
-
-					# 更新 validation
-					self.getArgs(element)
 
 	def echoLog(self, echostr, msgstr):
 		print("{}: {}".format(echostr, msgstr))
@@ -121,16 +120,6 @@ class main:
 		numbers = lotteryConstant.lottery_parser[header].parse(soup)
 		return numbers
 		
-		# SuperLotto638Control_history1_dlQuery_No7_0
-		# Lotto649Control_history_dlQuery_SNo5_0
-		# D539Control_history1_dlQuery_SNo3_0
-		# Lotto1224Control_history_dlQuery_SNo7_0
-		# font_black14b_center
-		# font_black14b_center
-		# M638Control_history1_dlQuery_SNo3_0
-		# M649Control_history1_dlQuery_SNo2_0
-		# M539Control_history1_dlQuery_Label9_0
-
 	def checkServerStatus(self, htmlpage):
 		if htmlpage.status_code != 200: raise serverError(htmlpage.status_code)
 
