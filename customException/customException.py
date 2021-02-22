@@ -14,6 +14,10 @@ class serverError(Exception):
 	def __init__(self, code):
 		super().__init__("HTTP status code: {}".format(code))
 
+class sessionClearNotification(Exception):
+	def __init__(self):
+		super().__init__()
+
 class stepBackNotification(Exception):
 	def __init__(self):
 		super().__init__()
