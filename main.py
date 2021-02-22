@@ -57,7 +57,7 @@ class main:
 				counter = 1
 				while True:
 					tcounter = str(counter)
-					prefixs = "{}Control_history1".format(header)
+					prefixs = "{}Control_history{}".format(header, lotteryConstant.lottery_control[header])
 					myparams = {
 						"__EVENTTARGET": "",
 						"__EVENTARGUMENT": "",

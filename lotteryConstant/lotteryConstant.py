@@ -2,6 +2,8 @@ import sys
 sys.path.append("..")
 
 from lotteryParser import SuperLotto638Parser
+from lotteryParser import Lotto649Parser
+from lotteryParser import D539Parser
 
 class lotteryConstant:
 	# 威力彩, 大樂透, 今彩539,
@@ -18,7 +20,7 @@ class lotteryConstant:
 		"M638", "M649", "M539"
 	]
 	lottery_dropdown = [
-		1, 2, 3,
+		1, 2, 5,
 		4, 6, 7,
 		8, 9, 10
 	]
@@ -28,5 +30,7 @@ class lotteryConstant:
 		"M638": "1", "M649": "1", "M539": "1"
 	}
 	lottery_parser = {
-		"SuperLotto638": SuperLotto638Parser.SuperLotto638Parser(lottery_control["SuperLotto638"])
+		"SuperLotto638": SuperLotto638Parser.SuperLotto638Parser(lottery_control["SuperLotto638"]),
+		"Lotto649": Lotto649Parser.Lotto649Parser(lottery_control["Lotto649"])
+		"D539": D539Parser.D539Parser(lottery_control["D539"])
 	}
