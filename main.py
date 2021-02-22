@@ -36,23 +36,27 @@ class main:
 			f.close()
 
 	def getArgs(self, element):
+		self.myrequests.cookies.clear()
 		htmlpage = self.myrequests.get("{}{}{}".format(self.url_f, element, self.url_l))
 		htmltext = htmlpage.text
 		soup = BeautifulSoup(htmltext, "html.parser")
+		
+		try:
+			self.viewstategenerator = soup.find("input", {"id": "__VIEWSTATEGENERATOR"})["value"]
+			self.viewstate          = soup.find("input", {"id": "__VIEWSTATE"})["value"]
+			self.eventvalidation    = soup.find("input", {"id": "__EVENTVALIDATION"})["value"]
 
-		self.viewstategenerator = soup.find("input", {"id": "__VIEWSTATEGENERATOR"})["value"]
-		self.viewstate          = soup.find("input", {"id": "__VIEWSTATE"})["value"]
-		self.eventvalidation    = soup.find("input", {"id": "__EVENTVALIDATION"})["value"]
-
-		if self.viewstate is None or \
-			self.viewstategenerator is None or \
-			self.eventvalidation is None:
-			raise lotteryValidationFailed
+			if self.viewstate is None or \
+				self.viewstategenerator is None or \
+				self.eventvalidation is None:
+				raise lotteryValidationFailed
+		except (TypeError, lotteryValidationFailed) as e:
+			print(e)
 
 	def craw(self):
-		# 取得 validation
-		self.getArgs(lotteryConstant.lottery_type[0])
 		for dropdown, header, element in zip(lotteryConstant.lottery_dropdown, lotteryConstant.lottery_header, lotteryConstant.lottery_type):
+			# 取得 validation
+			self.getArgs(element)
 			for year in range(self.start_year, self.end_year + 1):
 				counter = 1
 				while True:
@@ -95,7 +99,7 @@ class main:
 
 		try:
 			self.checkServerStatus(htmlpage)
-			self.checkEmpty(htmlpage, header, dropdown)
+			self.checkEmpty(htmlpage, header)
 			numbers = self.parseNumber(htmlpage, header)
 		except lotteryEmptyError as e:
 			msgstr = e
@@ -143,7 +147,7 @@ class main:
 			tmp2 = soup.body.findAll(text=re.compile(str(error)))
 			if tmp is True and tmp2 is not None: raise serverError(error)
 
-	def checkEmpty(self, htmlpage, header, dropdown):
+	def checkEmpty(self, htmlpage, header):
 		htmlpage.encoding = "utf-8"
 		htmltext = htmlpage.text
 		soup = BeautifulSoup(htmltext, "html.parser")
