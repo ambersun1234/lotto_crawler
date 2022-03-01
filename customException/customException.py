@@ -1,27 +1,27 @@
-class lotteryEmptyError(Exception):
+class LotteryEmptyError(Exception):
 	def __init__(self):
 		super().__init__("no data found")
 
-class lotteryPageError(Exception):
+class LotteryPageError(Exception):
 	def __init__(self):
 		super().__init__("error getting page")
 
-class lotteryValidationFailed(Exception):
+class LotteryValidationFailed(Exception):
 	def __init__(self):
 		super().__init__("cannot get validation argument")
 
-class serverError(Exception):
+class ServerError(Exception):
 	def __init__(self, code):
 		super().__init__("HTTP status code: {}".format(code))
 
-class sessionClearNotification(Exception):
+class SessionClearNotification(Exception):
 	def __init__(self):
 		super().__init__()
 
-class stepBackNotification(Exception):
+class StepBackNotification(Exception):
 	def __init__(self):
 		super().__init__()
 
-class breakNotification(Exception):
+class BreakNotification(Exception):
 	def __init__(self):
 		super().__init__()

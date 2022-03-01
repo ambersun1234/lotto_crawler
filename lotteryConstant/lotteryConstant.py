@@ -11,7 +11,7 @@ from lotteryParser import M638Parser
 from lotteryParser import M649Parser
 from lotteryParser import M539Parser
 
-class lotteryConstant:
+class lottery_constant:
 	# 威力彩, 大樂透, 今彩539,
 	# 雙贏彩, 三星彩, 四星彩,
 	# 38樂合彩, 49樂合彩, 39樂合彩
